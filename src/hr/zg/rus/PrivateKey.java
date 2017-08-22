@@ -159,7 +159,7 @@ public class PrivateKey {
     }
 
     public void setCompressed(boolean compressed){
-        if(isCompressed()) throw new IllegalArgumentException("Cannot change key compression!");
+        if(isCompressed()) throw new IllegalArgumentException("Cannot uncompress compressed key!");
         this.compressed = compressed;
     }
 

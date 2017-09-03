@@ -150,16 +150,8 @@ public class PublicKey {
 
     public String makePubkeyScript(){
         String address = toAddress();
-        byte[] raw_script = Base58Check.base58ToBytes(address); // version byte + PKH
-        byte[] raw_pkh = new byte[32];
 
-        System.arraycopy(raw_script, 1, raw_pkh, 12, 20);
-        int[] temp = new int[8];
-        Int256Math.bytesToUint(raw_pkh, temp, 0);
-        String hex_key = Int256Math.uintToHex(temp, 0);
-        hex_key = hex_key.substring(24, hex_key.length());
-
-        return "76a914" + hex_key + "88ac";
+        return makePubkeyScript(address);
     }
 
     public boolean isValid() {

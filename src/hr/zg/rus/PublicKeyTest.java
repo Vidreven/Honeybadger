@@ -99,6 +99,7 @@ public class PublicKeyTest {
         pkey.setHexKey("1111111111111111111111111111111111111111111111111111111111111111");
         hex_key = "044f355bdcb7cc0af728ef3cceb9615d90684bb5b2ca5f859ab0f0b704075871aa385b6b1b8ead809ca67454d9683fcf2ba03456d6fe2c4abe2b07f0fbdbb2f1c1";
         address = "1MsHWS1BnwMc3tLE8G35UXsS58fKipzB7a";
+        String scriptPubKey = "76a914e4e517ee07984a4000cd7b00cbcb545911c541c488ac";
 
         PublicKey pubkey = new PublicKey(pkey);
         pubkey.generatePubKey();
@@ -109,18 +110,25 @@ public class PublicKeyTest {
         if(!pubkey.toAddress().equals(address)){
             System.out.println("Invalid address generation!");
         }
+        if(!pubkey.makePubkeyScript().equals(scriptPubKey)){
+            System.out.println("Invalid scriptPubKEy generation!");
+        }
 
         pkey.setCompressed(true);
         PublicKey pub = new PublicKey(pkey);
         pub.generatePubKey();
         hex_key = "034f355bdcb7cc0af728ef3cceb9615d90684bb5b2ca5f859ab0f0b704075871aa";
         address = "1Q1pE5vPGEEMqRcVRMbtBK842Y6Pzo6nK9";
+        scriptPubKey = "76a914fc7250a211deddc70ee5a2738de5f07817351cef88ac";
 
         if(!pub.toHex().equals(hex_key)){
             System.out.println("Wrong compressed public key generation!");
         }
         if(!pub.toAddress().equals(address)){
             System.out.println("Invalid compressed address generation!");
+        }
+        if(!pub.makePubkeyScript().equals(scriptPubKey)){
+            System.out.println("Invalid compressed scriptPubKEy generation!");
         }
     }
 }

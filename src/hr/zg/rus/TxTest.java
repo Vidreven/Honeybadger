@@ -5,8 +5,8 @@ package hr.zg.rus;
  */
 public class TxTest {
     public static void main(String[] args) {
-        String scriptSig1 = "483045022100b1ae2f0e2639e0382189bb4fa547b9a23fcafdd25bfd2f1ea853222993c511e30220181d1cb60ffe1674da575cc109c3e990fc7a2e6d476faad10bad12b139edbe060147304402203fa8a58ed49b09e3a5326ffd84efb06b74d2ee4c334089840c5b400f5ebec6090220045664a82a1b76ecbb451a047c023a1805c45c3a058c4955554e06b9d220b108014c69522102178affc15573e78bb054ca53479318fb28e8332020a39542129c40745d0edd8a2102c2044225923f27ba829611ca1f7baf754a7a0981fc0fe289349fbacd8db0d70121034f92892a65258d8f9de0b324e4446688b4ad929fb93f0891bb3db9bf933ddd3853ae";
-        TxOut out0 = new TxOut(20_000, "76a91496c8fe3196453eb48aaad26d5e1b96a8681e93c188ac");
+        String scriptSig1 = "483045022100ca178f82e897282419873e60003972f3874b78eaa2185a02979e18fdf2d0654c022008bb703f32dc5457118e08331d3e8ef548bd3479bf963408e5c9bb6754a9fc8a0141044f355bdcb7cc0af728ef3cceb9615d90684bb5b2ca5f859ab0f0b704075871aa385b6b1b8ead809ca67454d9683fcf2ba03456d6fe2c4abe2b07f0fbdbb2f1c1";
+        TxOut out0 = new TxOut(100_000, "76a914e4e517ee07984a4000cd7b00cbcb545911c541c488ac");
         OutPoint prevout = new OutPoint("3231f0e349994ce41f2d40b6a011be4ea76f94dd897b5de128704fc0445111ab", 0);
         TxIn in0 = new TxIn(prevout, scriptSig1);
 
@@ -58,6 +58,11 @@ public class TxTest {
         Tx transaction = new Tx(inputs, outputs);
 
         transaction = transaction.signTx(private_key);
-        System.out.println(transaction);
+        String tx_serialized = "0200000001ab115144c04f7028e15d7b89dd946fa74ebe11a0b6402d1fe44c9949e3f03132000000008b" + scriptSig1
+                + "ffffffff01a0860100000000001976a91408e9008a6e4b0214a5918b3b9dc00e4ad28fabf488ac00000000";
+
+        if(!transaction.toString().equals(tx_serialized)){
+            System.out.println("Wrong signature!");
+        }
     }
 }

@@ -121,6 +121,14 @@ public class PrivateKeyTest {
         if(!pkey.isValid()){
             System.out.println("Private key should be valid!");
         }
+        if(!pkey.toWIF().equals("5HwoXVkHoRM8sL2KmNRS217n1g8mPPBomrY7yehCuXC1115WWsh")){
+            System.out.println("Invalid WIF!");
+        }
+
+        pkey.setCompressed(true);
+        if(!pkey.toWIF().equals("KwntMbt59tTsj8xqpqYqRRWufyjGunvhSyeMo3NTYpFYzZbXJ5Hp")){
+            System.out.println("Invalid compressed WIF!");
+        }
 
         PrivateKey key = new PrivateKey();
         key.setWIF("5K4MmZeDavqifLDdG5WSoDEFDECQMyQQeyNyf8h7omBpSonYggz");

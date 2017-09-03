@@ -18,15 +18,15 @@ public class Tx {
     public String locktime;
 
     public Tx(TxIn[] ins, TxOut[] outs){
-        this.ins = ins;
-        this.outs = outs;
-        locktime = "00000000";
+        setIns(ins);
+        setOuts(outs);
+        setLocktime("00000000");
     }
 
     public Tx(TxIn[] ins, TxOut[] outs, String locktime){
-        this.ins = ins;
-        this.outs = outs;
-        this.locktime = locktime;
+        setIns(ins);
+        setOuts(outs);
+        setLocktime(locktime);
     }
 
     public static Tx newInstance(Tx tx){
@@ -38,6 +38,7 @@ public class Tx {
     }
 
     public void setIns(TxIn[] ins) {
+        checkIns(ins);
         this.ins = ins;
     }
 
@@ -46,6 +47,7 @@ public class Tx {
     }
 
     public void setOuts(TxOut[] outs) {
+        checkOuts(outs);
         this.outs = outs;
     }
 
@@ -54,6 +56,9 @@ public class Tx {
     }
 
     public void setLocktime(String locktime) {
+        if(locktime.length() != 8) throw new IllegalArgumentException("Locktime must be 8 characters long!");
+        Long.decode("0x" + locktime);
+
         this.locktime = locktime;
     }
 
@@ -80,8 +85,10 @@ public class Tx {
         return output;
     }
 
-    public Tx signTx(Tx tx, PrivateKey private_key){
-        TxIn[] inputs = tx.getIns();
+    //public Tx signTx(Tx tx, PrivateKey private_key){
+    public Tx signTx(PrivateKey private_key){
+        TxIn[] inputs = getIns(); //tx.getIns();
+        Tx tx = new Tx(getIns(), getOuts());
 
         for (int i = 0; i<inputs.length; i++) {
             tx = sign_input(tx, i, private_key);
@@ -101,7 +108,6 @@ public class Tx {
         public_key.generatePubKey();
         int[] pubkey = public_key.getPublic_key();
 
-        //String address = public_key.toAddress();
         String script_pubkey = public_key.makePubkeyScript();
         Tx tx_copy = Tx.newInstance(tx);
 
@@ -232,5 +238,20 @@ public class Tx {
             b[i / 2] = (byte)Integer.parseInt(s.substring(i, i + 2), 16);
         }
         return b;
+    }
+
+    private void checkOuts(TxOut[] outs){
+        for(TxOut out : outs){
+            if((out.getAmount() < 546) || (out.getScriptPubKey() == null) || (out.getScriptPubKey() == ""))
+                throw new IllegalArgumentException("Invalid input");
+        }
+    }
+
+    private void checkIns(TxIn[] ins){
+        for(TxIn in : ins){
+            if((in.getPrevout() == null) || (in.getScriptSig() == null) || (in.getSequence() == null)){
+                throw new IllegalArgumentException("Invalid input");
+            }
+        }
     }
 }

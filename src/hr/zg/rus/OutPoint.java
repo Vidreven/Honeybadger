@@ -8,13 +8,31 @@ public class OutPoint {
     private int n;
 
     public OutPoint(String hash, int n) {
-        this.hash = hash;
-        this.n = n;
+        setHash(hash);
+        setIndex(n);
     }
 
     public boolean equals(OutPoint other){
 
         return (this.hash.equals(other.hash)) && (this.n == other.n);
+    }
+
+    public String getHash() {
+        return hash;
+    }
+
+    public int getIndex() {
+        return n;
+    }
+
+    public void setHash(String hash) {
+        if(hash.length() != 64) throw new IllegalArgumentException("Invalid transaction hash!");
+        this.hash = hash;
+    }
+
+    public void setIndex(int n) {
+        if(n < 0) throw new IllegalArgumentException("Index must be > 0!");
+        this.n = n;
     }
 
     @Override

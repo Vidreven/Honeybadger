@@ -10,21 +10,23 @@ public class TxOut {
     public TxOut(){}
 
     public TxOut(String scriptPubKey){
-        this.scriptPubKey = scriptPubKey;
-        this.amount = 546;
+        setScriptPubKey(scriptPubKey);
+        setAmount(546);
     }
 
     public  TxOut(int satoshi, String scriptPubKey){
-        amount = satoshi;
-        this.scriptPubKey = scriptPubKey;
+        setAmount(satoshi);
+        setScriptPubKey(scriptPubKey);
     }
 
     public void setAmount(int amount) {
+        if(amount < 546) throw new IllegalArgumentException("Minimum amount is 546 satoshi!");
 
         this.amount = amount;
     }
 
     public void setScriptPubKey(String scriptPubKey) {
+        if((scriptPubKey.equals("")) || (scriptPubKey == null)) throw new IllegalArgumentException("Script must not be empty!");
 
         this.scriptPubKey = scriptPubKey;
     }

@@ -1,8 +1,5 @@
 package hr.zg.rus;
 
-/**
- * Created by hyperion on 8/18/17.
- */
 public class OutPoint {
     private String hash;
     private int n;

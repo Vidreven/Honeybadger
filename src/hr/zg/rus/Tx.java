@@ -7,9 +7,6 @@ import io.nayuki.bitcoin.crypto.Sha256Hash;
 
 import java.util.Arrays;
 
-/**
- * Created by hyperion on 8/18/17.
- */
 public class Tx {
 
     public static String VERSION = "02000000";
@@ -87,7 +84,7 @@ public class Tx {
 
     //public Tx signTx(Tx tx, PrivateKey private_key){
     public Tx signTx(PrivateKey private_key){
-        TxIn[] inputs = getIns(); //tx.getIns();
+        TxIn[] inputs = getIns();
         Tx tx = new Tx(getIns(), getOuts());
 
         for (int i = 0; i<inputs.length; i++) {
@@ -106,7 +103,7 @@ public class Tx {
 
         PublicKey public_key = new PublicKey(private_key);
         public_key.generatePubKey();
-        int[] pubkey = public_key.getPublic_key();
+        //int[] pubkey = public_key.getPublic_key();
 
         String script_pubkey = public_key.makePubkeyScript();
         Tx tx_copy = Tx.newInstance(tx);
@@ -115,9 +112,11 @@ public class Tx {
         sig = sign(signing_tx, private_key);
         sig_length = sig.length() >> 1;
 
-        x = Int256Math.uintToHex(pubkey, 0);
-        y = Int256Math.uintToHex(pubkey, 8);
-        pubkey_string = "04" + x + y;
+//        x = Int256Math.uintToHex(pubkey, 0);
+//        y = Int256Math.uintToHex(pubkey, 8);
+//        pubkey_string = "04" + x + y;
+//        pub_length = pubkey_string.length() >> 1;
+        pubkey_string = public_key.toHex();
         pub_length = pubkey_string.length() >> 1;
 
         scriptSig = Integer.toHexString(sig_length) + sig + Integer.toHexString(pub_length) + pubkey_string;

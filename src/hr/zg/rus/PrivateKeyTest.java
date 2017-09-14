@@ -1,11 +1,13 @@
 package hr.zg.rus;
 
-/**
- * Created by hyperion on 8/20/17.
- */
+import java.util.Hashtable;
+
 public class PrivateKeyTest {
     public static void main(String[] args){
-        PrivateKey private_key = new PrivateKey();
+        Networks networks = new Networks();
+        Hashtable<String, Hashtable> network = networks.getNetworks();
+
+        PrivateKey private_key = new PrivateKey(network.get("bitcoin"));
 
         boolean valid;
         boolean compressed;
@@ -115,8 +117,9 @@ public class PrivateKeyTest {
             System.out.println("Invalid WIF " + wif);
         }
 
-        PrivateKey pkey = new PrivateKey();
+        PrivateKey pkey = new PrivateKey(network.get("bitcoin"));
         pkey.setHexKey("1111111111111111111111111111111111111111111111111111111111111111");
+        pkey.setNetwork(network.get("bitcoin"));
 
         if(!pkey.isValid()){
             System.out.println("Private key should be valid!");
@@ -130,18 +133,24 @@ public class PrivateKeyTest {
             System.out.println("Invalid compressed WIF!");
         }
 
-        PrivateKey key = new PrivateKey();
+        PrivateKey key = new PrivateKey(network.get("bitcoin"));
         key.setWIF("5K4MmZeDavqifLDdG5WSoDEFDECQMyQQeyNyf8h7omBpSonYggz");
 
         if(!key.isValid()){
             System.out.println("Private key should be valid!");
         }
 
-        PrivateKey pk = new PrivateKey();
+        PrivateKey pk = new PrivateKey(network.get("bitcoin"));
         pk.setWIF("L5dVXG7jMqad1pRJN7pkNKsvELGkbDxPBgFH6A3ZN2GDRRDCPuGt");
 
         if(!pk.isValid()){
             System.out.println("Private key should be valid!");
+        }
+
+        pk.setNetwork(network.get("testnet"));
+
+        if(!pk.toWIF().substring(0, 1).equals("c")){
+            System.out.println("Invalid testnet WIF!");
         }
     }
 }

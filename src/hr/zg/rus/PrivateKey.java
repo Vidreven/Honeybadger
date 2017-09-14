@@ -5,21 +5,21 @@ import io.nayuki.bitcoin.crypto.Base58Check;
 
 import java.security.SecureRandom;
 import java.util.Arrays;
+import java.util.Hashtable;
 
-/**
- * Created by hyperion on 8/18/17.
- */
 public class PrivateKey {
     private SecureRandom random;
     private byte[] private_key = new byte[32];
     private boolean valid;
     private boolean compressed;
+    private Hashtable<String, Byte> network;
 
     static final int[] ORDER = {0xD0364141, 0xBFD25E8C, 0xAF48A03B, 0xBAAEDCE6, 0xFFFFFFFE, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF};
 
-    public PrivateKey(){
+    public PrivateKey(Hashtable<String, Byte> network){
         valid = false;
         compressed = false;
+        this.network = network;
     }
 
     // Returns private key as 32 bytes big endian.
@@ -92,7 +92,7 @@ public class PrivateKey {
             priv[33] = (byte)0x01;
         }
 
-        priv[0] = (byte)0x80;
+        priv[0] = network.get("wif");
         System.arraycopy(private_key, 0, priv, 1, 32);
 
         return Base58Check.bytesToBase58(priv);
@@ -161,6 +161,14 @@ public class PrivateKey {
     public void setCompressed(boolean compressed){
         if(isCompressed()) throw new IllegalArgumentException("Cannot uncompress compressed key!");
         this.compressed = compressed;
+    }
+
+    public void setNetwork(Hashtable<String, Byte> network){
+        this.network = network;
+    }
+
+    public Hashtable<String, Byte> getNetwork() {
+        return network;
     }
 
     private boolean isValidPrivate(byte[] privkey){

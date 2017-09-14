@@ -1,8 +1,5 @@
 package hr.zg.rus;
 
-/**
- * Created by evedili on 23.8.2017..
- */
 public class TxOutTest {
     public static void main(String[] args) {
         int amount;

@@ -1,8 +1,5 @@
 package hr.zg.rus;
 
-/**
- * Created by hyperion on 8/18/17.
- */
 public class TxIn {
     private OutPoint prevout;
     private String scriptSig;

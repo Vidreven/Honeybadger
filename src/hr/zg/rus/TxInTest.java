@@ -1,8 +1,5 @@
 package hr.zg.rus;
 
-/**
- * Created by evedili on 28.8.2017..
- */
 public class TxInTest {
     public static void main(String[] args) {
         OutPoint op = new OutPoint("3231f0e349994ce41f2d40b6a011be4ea76f94dd897b5de128704fc0445111ab", 0);

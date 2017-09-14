@@ -3,16 +3,15 @@ package hr.zg.rus;
 import io.nayuki.bitcoin.crypto.*;
 
 import java.util.Arrays;
+import java.util.Hashtable;
 
-/**
- * Created by hyperion on 8/18/17.
- */
 public class PublicKey {
     private int[] val = new int[3 * 8 + 1 * 8 + CurvePointMath.MULTIPLY_TEMP_WORDS];
     private int[] public_key = new int[24];
     private boolean valid;
     private boolean compressed;
     private PrivateKey private_key;
+    private Hashtable<String, Byte> network;
 
     // Should accept PrivateKey as argument.
     public PublicKey(PrivateKey privkey){
@@ -22,6 +21,7 @@ public class PublicKey {
         valid = false;
         this.private_key = privkey;
         this.compressed = privkey.isCompressed();
+        this.network = privkey.getNetwork();
     }
 
     // Returns public key in little endian.
@@ -129,7 +129,7 @@ public class PublicKey {
 
         rmdsha = Ripemd160.getHash(sha.toBytes());
         byte[] raw_key = new byte[21];
-        raw_key[0] = 0;
+        raw_key[0] = network.get("pubKeyHash");
         System.arraycopy(rmdsha, 0, raw_key, 1, 20);
 
         return Base58Check.bytesToBase58(raw_key);

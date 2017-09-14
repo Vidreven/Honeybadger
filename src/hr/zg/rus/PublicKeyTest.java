@@ -1,11 +1,13 @@
 package hr.zg.rus;
 
-/**
- * Created by evedili on 23.8.2017..
- */
+import java.util.Hashtable;
+
 public class PublicKeyTest {
     public static void main(String[] args){
-        PrivateKey private_key = new PrivateKey();
+        Networks networks = new Networks();
+        Hashtable<String, Hashtable> network = networks.getNetworks();
+
+        PrivateKey private_key = new PrivateKey(network.get("bitcoin"));
         private_key.generatePrivateKey(false);
         PublicKey public_key = new PublicKey(private_key);
 
@@ -95,7 +97,7 @@ public class PublicKeyTest {
             System.out.println("Invalid script!");
         }
 
-        PrivateKey pkey = new PrivateKey();
+        PrivateKey pkey = new PrivateKey(network.get("bitcoin"));
         pkey.setHexKey("1111111111111111111111111111111111111111111111111111111111111111");
         hex_key = "044f355bdcb7cc0af728ef3cceb9615d90684bb5b2ca5f859ab0f0b704075871aa385b6b1b8ead809ca67454d9683fcf2ba03456d6fe2c4abe2b07f0fbdbb2f1c1";
         address = "1MsHWS1BnwMc3tLE8G35UXsS58fKipzB7a";
@@ -111,7 +113,7 @@ public class PublicKeyTest {
             System.out.println("Invalid address generation!");
         }
         if(!pubkey.makePubkeyScript().equals(scriptPubKey)){
-            System.out.println("Invalid scriptPubKEy generation!");
+            System.out.println("Invalid scriptPubKey generation!");
         }
 
         pkey.setCompressed(true);
@@ -128,6 +130,35 @@ public class PublicKeyTest {
             System.out.println("Invalid compressed address generation!");
         }
         if(!pub.makePubkeyScript().equals(scriptPubKey)){
+            System.out.println("Invalid compressed scriptPubKEy generation!");
+        }
+
+        PrivateKey private2 = new PrivateKey(network.get("testnet"));
+        private2.setHexKey("1111111111111111111111111111111111111111111111111111111111111111");
+        private2.setCompressed(false);
+        PublicKey pub2 = new PublicKey(private2);
+        pub2.generatePubKey();
+
+        if(!pub2.toHex().equals("044f355bdcb7cc0af728ef3cceb9615d90684bb5b2ca5f859ab0f0b704075871aa385b6b1b8ead809ca67454d9683fcf2ba03456d6fe2c4abe2b07f0fbdbb2f1c1")){
+            System.out.println("Wrong public key generation!");
+        }
+        if((!pub2.toAddress().substring(0, 1).equals("m")) && !pub2.toAddress().substring(0, 1).equals("n")){
+            System.out.println("Invalid address generation!");
+        }
+        if(!pub2.makePubkeyScript().equals("76a914e4e517ee07984a4000cd7b00cbcb545911c541c488ac")){
+            System.out.println("Invalid scriptPubKey generation!");
+        }
+        private2.setCompressed(true);
+        pub2 = new PublicKey(private2);
+        pub2.generatePubKey();
+
+        if(!pub2.toHex().equals(hex_key)){
+            System.out.println("Wrong compressed public key generation!");
+        }
+        if((!pub2.toAddress().substring(0, 1).equals("m")) && !pub2.toAddress().substring(0, 1).equals("n")){
+            System.out.println("Invalid address generation!");
+        }
+        if(!pub2.makePubkeyScript().equals(scriptPubKey)){
             System.out.println("Invalid compressed scriptPubKEy generation!");
         }
     }

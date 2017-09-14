@@ -1,10 +1,12 @@
 package hr.zg.rus;
 
-/**
- * Created by evedili on 29.8.2017..
- */
+import java.util.Hashtable;
+
 public class TxTest {
     public static void main(String[] args) {
+        Networks networks = new Networks();
+        Hashtable<String, Hashtable> network = networks.getNetworks();
+
         String scriptSig1 = "483045022100ca178f82e897282419873e60003972f3874b78eaa2185a02979e18fdf2d0654c022008bb703f32dc5457118e08331d3e8ef548bd3479bf963408e5c9bb6754a9fc8a0141044f355bdcb7cc0af728ef3cceb9615d90684bb5b2ca5f859ab0f0b704075871aa385b6b1b8ead809ca67454d9683fcf2ba03456d6fe2c4abe2b07f0fbdbb2f1c1";
         TxOut out0 = new TxOut(100_000, "76a914e4e517ee07984a4000cd7b00cbcb545911c541c488ac");
         OutPoint prevout = new OutPoint("3231f0e349994ce41f2d40b6a011be4ea76f94dd897b5de128704fc0445111ab", 0);
@@ -37,7 +39,7 @@ public class TxTest {
             System.out.println("Invalid locktime!");
         }
 
-        PrivateKey private_key = new PrivateKey();
+        PrivateKey private_key = new PrivateKey(network.get("bitcoin"));
         private_key.setHexKey("1111111111111111111111111111111111111111111111111111111111111111");
 
         PublicKey public_key = new PublicKey(private_key);
@@ -63,6 +65,35 @@ public class TxTest {
 
         if(!transaction.toString().equals(tx_serialized)){
             System.out.println("Wrong signature!");
+        }
+
+        private_key.setCompressed(true);
+        public_key = new PublicKey(private_key);
+        public_key.generatePubKey();
+
+        transaction = transaction.signTx(private_key);
+
+        if(transaction.toString().length() != 384){
+            System.out.println("Invalid compressed public key transaction signature!");
+        }
+
+        PrivateKey pkey = new PrivateKey(network.get("testnet"));
+        pkey.setHexKey("1111111111111111111111111111111111111111111111111111111111111111");
+        public_key = new PublicKey(pkey);
+        public_key.generatePubKey();
+        transaction = transaction.signTx(pkey);
+
+        if(!transaction.toString().equals(tx_serialized)){
+            System.out.println("Wrong testnet signature!");
+        }
+
+        pkey.setCompressed(true);
+        public_key = new PublicKey(pkey);
+        public_key.generatePubKey();
+        transaction = transaction.signTx(pkey);
+
+        if(transaction.toString().length() != 384){
+            System.out.println("Invalid compressed public key testnet signature!");
         }
     }
 }
